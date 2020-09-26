@@ -266,4 +266,4 @@ for (i in 1:nfips) {
 #                    dates = dat$ddate)
 
 newdat <- dat
-save(dat, file = "covid19new.RData")
+save(newdat, file = "covid19new.RData")
