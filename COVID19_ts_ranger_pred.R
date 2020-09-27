@@ -49,11 +49,13 @@ mod <- ranger(f1, data = dat)
 pred <- predict(mod, newdat, predict.all = TRUE,
                 verbose = TRUE, type = "response")
 
-newdat$pred <- apply(pred$predictions, 1, mean)
-newdat$cilo <- apply(pred$predictions, 1, quantile, 0.025)
-newdat$cihi <- apply(pred$predictions, 1, quantile, 0.975)
+newdat$pred <- exp(apply(pred$predictions, 1, mean))
+# newdat$cilo <- exp(apply(pred$predictions, 1, quantile, 0.025))
+# newdat$cihi <- exp(apply(pred$predictions, 1, quantile, 0.975))
+
+newdat$pred = newdat$pred - 1e-5
 
 out <- newdat %>% 
-  select(state, date, FIPS, Province_State, sFIPS, pred, cilo, cihi)
+  select(state, date, FIPS, Province_State, sFIPS, pred)
 
 write.csv(out, "COVID19_tests_pred_ranger.csv", row.names = FALSE)
