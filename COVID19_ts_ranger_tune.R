@@ -63,7 +63,9 @@ ctrl <- trainControl(method = "cv",
 
 
 ## -------------------------------------------------------------------------------------------
-parGrid = expand.grid(mtry = 2:6, splitrule = "variance", min.node.size = 4:8)
+parGrid = expand.grid(mtry = 2:6, 
+                      splitrule = "variance", 
+                      min.node.size = 4:8)
 # parGrid = expand.grid(mtry = 6, splitrule = "variance", min.node.size = 4)
 
 
@@ -84,7 +86,7 @@ modFit <- train(
   ## increase parameter set
   tuneGrid = parGrid,
   ## added:
-  num.trees = 250,
+  num.trees = 500,
   weights = casewgt,
   importance = 'permutation',
   trControl = ctrl
@@ -130,7 +132,7 @@ ltr_hist <- hist(dat$ltest_rate, plot = FALSE,
 wgt_vec <- 1 / ltr_hist$counts
 casewgt <- wgt_vec[cut(dat$ltest_rate, include.lowest = TRUE,
                        breaks = ltr_hist$breaks, labels = FALSE)]
-mod <- ranger(f1, data = dat, 
+mod <- ranger(f1, data = dat, num.trees = 500,
               mtry = 6, min.node.size = 4,
               importance = 'permutation',
               case.weights = casewgt)

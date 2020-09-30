@@ -44,8 +44,20 @@ parGrid = expand.grid(mtry = 6, splitrule = "variance", min.node.size = 4)
 
 dat$baseline <- ((dat$sTest * dat$pState_popn) / dat$Tot_pop) * 1e3
 
-mod <- ranger(f1, data = dat)
+## Case weights
+ltr_hist <- hist(dat$ltest_rate, plot = FALSE,
+                 seq(min(dat$ltest_rate), max(dat$ltest_rate), length.out = 100))
+wgt_vec <- 1 / ltr_hist$counts
+casewgt <- wgt_vec[cut(dat$ltest_rate, include.lowest = TRUE,
+                       breaks = ltr_hist$breaks, labels = FALSE)]
+## Build model
+mod <- ranger(f1, data = dat, num.trees = 500,
+              mtry = 6, min.node.size = 4,
+              importance = 'permutation',
+              case.weights = casewgt)
 
+save(mod, file = "rf_pred.RData")
+## Predict
 pred <- predict(mod, newdat, predict.all = TRUE,
                 verbose = TRUE, type = "response")
 
