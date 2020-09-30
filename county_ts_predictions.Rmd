@@ -1,0 +1,78 @@
+---
+title: "COVID 19 county time series predictions"
+author: "Simon Brewer"
+date: "9/29/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message=FALSE}
+library(ggpubr)
+library(dplyr)
+library(lubridate)
+```
+
+```{r}
+# load("covid19new.RData")
+preds <- read.csv("COVID19_tests_pred_ranger.csv")
+preds$date <- ymd(preds$date)
+```
+
+### King County, WA
+
+Where the first case was reported. 
+
+```{r}
+fips = 53033
+preds.sub <- preds %>% 
+  filter(FIPS == fips)
+ggline(preds.sub, x = "date", y = "pred")
+```
+
+### Westchester County, NY
+
+The epicenter of the disease for a long time
+
+```{r}
+fips = 36119
+preds.sub <- preds %>% 
+  filter(FIPS == fips)
+ggline(preds.sub, x = "date", y = "pred")
+```
+
+
+## Blaine County, ID
+
+As an example of an outbreak at a resort
+
+```{r}
+fips = 16015
+preds.sub <- preds %>% 
+  filter(FIPS == fips)
+ggline(preds.sub, x = "date", y = "pred")
+```
+
+## Meade County, SD
+
+Did we catch the motorcycle rally in Sturgis? They must have ramped up testing for this.
+
+```{r}
+fips = 46093
+preds.sub <- preds %>% 
+  filter(FIPS == fips)
+ggline(preds.sub, x = "date", y = "pred")
+```
+
+## DeKalb County, GA
+
+I expect low testing effort from Georgia
+
+```{r}
+fips = 13089
+preds.sub <- preds %>% 
+  filter(FIPS == fips)
+ggline(preds.sub, x = "date", y = "pred")
+```
