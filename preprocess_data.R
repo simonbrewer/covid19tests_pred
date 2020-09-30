@@ -7,22 +7,52 @@ library(caret)
 library(lubridate)
 library(forecastML)
 library(zoo)
-library(recipes)
 
 ## -----------------------------------------------------------------------------
 ## Read and skim data
 dat <- read.csv("./rawdata/countyTable_timeSeries_v4.csv")
 skim(dat)
 
+state_popn <- read.csv("./rawdata/state_popn_2019.csv")
+
 ## -----------------------------------------------------------------------------
 ## Remove anything with missing hospital values
 dat <- dat[!is.na(dat$hospitals), ]
-## Set negative hospitalizations to zero
-dat$hospRate[dat$hospRate < 0] <- 0
+
 
 ## -----------------------------------------------------------------------------
-## Merge census based state population values
-state_popn <- read.csv("./rawdata/state_popn_2019.csv")
+## Remove MA and NV (one county each)
+# dat <- dat %>%
+#   filter(!state %in% c("MA", "NV"))
+
+
+## -----------------------------------------------------------------------------
+## Remove the IL zero tests
+# dat <- dat %>%
+#   filter(!(state == "IL" & cTest == 0))
+
+## -----------------------------------------------------------------------------
+## Drop the 15/16 May from Florida
+# dat <- dat %>%
+#   filter(!(state == "FL" & date %in% c("2020-05-15", "2020-05-16")))
+
+
+# ## -----------------------------------------------------------------------------
+# ## For several states the test numbers are cumulative
+# ## Calculate 'dTest' as the difference between cTest values\
+# dat$dTest <- dat$cTest
+# fips <- unique(dat$FIPS)
+# nfips <- length(fips)
+# for (i in 1:nfips) {
+#   fipsid <- which(dat$FIPS == fips[i])
+#   tmp <- dat[fipsid, ]
+#   if (!tmp$state[1] %in% c("NY", "CT", "MI", "WA")) {
+#     tmpdTest <- c(0, diff(tmp$cTest))
+#     tmpdTest[tmpdTest < 0] <- 0
+#     dat$dTest[fipsid] <- tmpdTest
+#   }
+# }
+
 
 ## -----------------------------------------------------------------------------
 state_test <- dat %>% 
