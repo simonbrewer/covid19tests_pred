@@ -121,4 +121,20 @@ p1 = ggscatter(mydf, x = "obs", y = "pred", col = "type",
   geom_abline()
 print(p1)
 
-ggsave("./results/COVID19_ranger_cv.pdf", p1)
+# ggsave("./results/COVID19_ranger_cv.pdf", p1)
+
+stop()
+
+ltr_hist <- hist(dat$ltest_rate, plot = FALSE,
+                 seq(min(dat$ltest_rate), max(dat$ltest_rate), length.out = 100))
+wgt_vec <- 1 / ltr_hist$counts
+casewgt <- wgt_vec[cut(dat$ltest_rate, include.lowest = TRUE,
+                       breaks = ltr_hist$breaks, labels = FALSE)]
+mod <- ranger(f1, data = dat, 
+              mtry = 6, min.node.size = 4,
+              importance = 'permutation',
+              case.weights = casewgt)
+
+# vip(mod)
+plot(partial(mod, pred.var = "daysSinceC"))
+     
