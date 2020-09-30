@@ -51,16 +51,26 @@ dat2 <- dat %>% select(ltest_rate, lpState_popn, lpPop_o_60, lpPop_m, lpPop_whit
 ## -------------------------------------------------------------------------------------------
 parGrid = expand.grid(mtry = 6, splitrule = "variance", min.node.size = 4)
 
-mod <- ranger(f1, data = dat2)
+## Case weights
+ltr_hist <- hist(dat$ltest_rate, plot = FALSE,
+                 seq(min(dat$ltest_rate), max(dat$ltest_rate), length.out = 100))
+wgt_vec <- 1 / ltr_hist$counts
+casewgt <- wgt_vec[cut(dat$ltest_rate, include.lowest = TRUE,
+                       breaks = ltr_hist$breaks, labels = FALSE)]
+## Build model
+mod <- ranger(f1, data = dat2, num.trees = 500,
+              mtry = 6, min.node.size = 4,
+              importance = 'permutation',
+              case.weights = casewgt)
 
-pred <- predict(mod, newdat, predict.all = TRUE,
-                verbose = TRUE, type = "response")
-
-newdat$pred <- exp(apply(pred$predictions, 1, mean))
-# newdat$cilo <- exp(apply(pred$predictions, 1, quantile, 0.025))
-# newdat$cihi <- exp(apply(pred$predictions, 1, quantile, 0.975))
-
-newdat$pred = newdat$pred - 1e-5
+# pred <- predict(mod, newdat, predict.all = TRUE,
+#                 verbose = TRUE, type = "response")
+# 
+# newdat$pred <- exp(apply(pred$predictions, 1, mean))
+# # newdat$cilo <- exp(apply(pred$predictions, 1, quantile, 0.025))
+# # newdat$cihi <- exp(apply(pred$predictions, 1, quantile, 0.975))
+# 
+# newdat$pred = newdat$pred - 1e-5
 
 # out <- newdat %>% 
 #   select(state, date, FIPS, Province_State, sFIPS, pred)
@@ -131,3 +141,22 @@ pdf("sc_1.pdf")
 plot(bd)
 dev.off()
 
+
+
+kc <- newdat %>% 
+  filter(FIPS == 53033) %>% 
+  select(date, lpState_popn, lpPop_o_60, lpPop_m, lpPop_white, 
+         lpPop_black, lpPop_AmIndAlNat, lpPop_asia, lpPop_NaHaPaIs,
+         lIncome, lpBachelor, phospitals, pnursing, puniversities,
+         pcaseNew_lag, daysSinceC, pdeathNew_lag, daysSinceD, hospRate, wday) %>%
+  group_by(date) %>%
+  summarise(across(lpState_popn:hospRate, mean, na.rm= TRUE))
+
+ddate <- ymd(kc$date)
+kc$wday <- wday(ddate, week_start = 1, label = TRUE)
+
+bd <- variable_attribution(explain_rf, kc[20,], type = "break_down")
+plot(bd)
+
+bd <- variable_attribution(explain_rf, kc[80,], type = "break_down")
+plot(bd)
