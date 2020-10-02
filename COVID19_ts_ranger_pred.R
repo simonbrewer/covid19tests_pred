@@ -81,6 +81,8 @@ out <- newdat %>%
 
 write.csv(out, "COVID19_tests_pred_ranger.csv", row.names = FALSE)
 
+
+stop()
 fips = 53033
 preds.sub <- newdat %>% 
   filter(FIPS == fips)
