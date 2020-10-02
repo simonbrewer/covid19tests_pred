@@ -22,12 +22,12 @@ dat <- dat %>%
   filter(!is.na(pcaseNew_lag))
 
 dat$ltest_rate <- log(dat$test_rate+1e-5)
-dat$daysSinceC[dat$daysSinceC < 0] <- 0
+# dat$daysSinceC[dat$daysSinceC < 0] <- 0
 load("./covid19new.RData")
 
 newdat <- newdat %>%
   filter(!is.na(pcaseNew_lag))
-newdat$daysSinceC[newdat$daysSinceC < 0] <- 0
+# newdat$daysSinceC[newdat$daysSinceC < 0] <- 0
 
 
 
@@ -39,8 +39,6 @@ f1 <- ltest_rate ~ lpState_popn + lpPop_o_60 + lpPop_m + lpPop_white +
   lpPop_black + lpPop_AmIndAlNat + lpPop_asia + lpPop_NaHaPaIs +
   lIncome + lpBachelor + phospitals + pnursing + puniversities +
   pcaseNew_lag + daysSinceC + pdeathNew_lag + daysSinceD + hospRate + wday # + sTest
-
-f1 <- ltest_rate ~ daysSinceC + wday # + sTest
 
 # f1 <- test_rate ~ pnursing +
 #   pcaseNew + daysSinceC + pdeathNew + daysSinceD + hospRate
@@ -57,13 +55,13 @@ wgt_vec <- 1 / ltr_hist$counts
 casewgt <- wgt_vec[cut(dat$ltest_rate, include.lowest = TRUE,
                        breaks = ltr_hist$breaks, labels = FALSE)]
 ## Build model
-mod <- ranger(f1, data = dat, num.trees = 500,
-              # importance = 'permutation',
-              case.weights = casewgt)
 # mod <- ranger(f1, data = dat, num.trees = 500,
-#               mtry = 6, min.node.size = 4,
 #               # importance = 'permutation',
 #               case.weights = casewgt)
+mod <- ranger(f1, data = dat, num.trees = 500,
+              mtry = 6, min.node.size = 4,
+              # importance = 'permutation',
+              case.weights = casewgt)
 
 save(mod, file = "rf_pred.RData")
 ## Predict
