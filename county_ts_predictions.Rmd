@@ -76,3 +76,13 @@ preds.sub <- preds %>%
   filter(FIPS == fips)
 ggline(preds.sub, x = "date", y = "pred")
 ```
+
+## San Francisco County, CA
+
+
+```{r}
+fips = 6075
+preds.sub <- preds %>% 
+  filter(FIPS == fips)
+ggline(preds.sub, x = "date", y = "pred")
+```
