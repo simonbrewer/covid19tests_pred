@@ -61,8 +61,9 @@ state_test <- dat %>%
             state_popn = sum(Tot_pop))
 ## Some states have zero tests - remove these
 # state_test$state_tests[state_test$state_tests == 0] <- 10 ## Kludge for missing tests
-state_test <- state_test %>% 
-  filter(state_tests > 0)
+## Removed 2020-10-07
+# state_test <- state_test %>% 
+#   filter(state_tests > 0)
 
 ## -----------------------------------------------------------------------------
 ## Merge census based state population values
@@ -190,8 +191,9 @@ state_test <- dat %>%
             state_popn = sum(Tot_pop))
 ## Some states have zero tests - remove these
 # state_test$state_tests[state_test$state_tests == 0] <- 10 ## Kludge for missing tests
-state_test <- state_test %>% 
-  filter(state_tests > 0)
+## Removed 2020-10-07
+# state_test <- state_test %>% 
+#   filter(state_tests > 0)
 
 ## -----------------------------------------------------------------------------
 ## Merge census based state population values
