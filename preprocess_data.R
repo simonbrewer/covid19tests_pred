@@ -185,10 +185,13 @@ dat$hospRate[dat$hospRate < 0] <- 0
 state_popn <- read.csv("./rawdata/state_popn_2019.csv")
 
 ## -----------------------------------------------------------------------------
+# state_test <- dat %>% 
+#   group_by(state.x, date) %>%
+#   summarize(state_tests = sum(sTest),
+#             state_popn = sum(Tot_pop))
 state_test <- dat %>% 
   group_by(state, date) %>%
-  summarize(state_tests = sum(sTest),
-            state_popn = sum(Tot_pop))
+  summarize(state_popn = sum(Tot_pop))
 ## Some states have zero tests - remove these
 # state_test$state_tests[state_test$state_tests == 0] <- 10 ## Kludge for missing tests
 ## Removed 2020-10-07
