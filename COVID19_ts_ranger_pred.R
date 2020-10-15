@@ -75,30 +75,29 @@ newdat$pred <- exp(apply(pred$predictions, 1, mean))
 newdat$pred = newdat$pred - 1e-5
 
 out <- newdat %>% 
-  select(state, date, FIPS, Province_State, sFIPS, pred)
+  select(state, date, FIPS, county, pred)
 
 write.csv(out, "COVID19_tests_pred_ranger.csv", row.names = FALSE)
 
 
-stop()
-fips = 53033
-preds.sub <- newdat %>% 
-  filter(FIPS == fips)
-preds.sub$date <- ymd(preds.sub$date)
-ggline(preds.sub, x = "date", y = "pred")
-
-ggline(preds.sub, x = "date", y = "lpState_popn")
-ggline(preds.sub, x = "date", y = "lpPop_o_60")
-ggline(preds.sub, x = "date", y = "pnursing")
-ggline(preds.sub, x = "date", y = "puniversities")
-ggline(preds.sub, x = "date", y = "pcaseNew_lag")
-ggline(preds.sub, x = "date", y = "daysSinceC")
-ggline(preds.sub, x = "date", y = "pdeathNew_lag")
-ggline(preds.sub, x = "date", y = "daysSinceD")
-ggline(preds.sub, x = "date", y = "wday")
-
-ggscatter(preds.sub, x = "daysSinceC", y = "pred")
-ggscatter(preds.sub, x = "daysSinceD", y = "pred")
-ggscatter(preds.sub, x = "pcaseNew_lag", y = "pred")
-ggscatter(preds.sub, x = "pdeathNew_lag", y = "pred")
-ggscatter(preds.sub, x = "wday", y = "pred")
+# fips = 53033
+# preds.sub <- newdat %>% 
+#   filter(FIPS == fips)
+# preds.sub$date <- ymd(preds.sub$date)
+# ggline(preds.sub, x = "date", y = "pred")
+# 
+# ggline(preds.sub, x = "date", y = "lpState_popn")
+# ggline(preds.sub, x = "date", y = "lpPop_o_60")
+# ggline(preds.sub, x = "date", y = "pnursing")
+# ggline(preds.sub, x = "date", y = "puniversities")
+# ggline(preds.sub, x = "date", y = "pcaseNew_lag")
+# ggline(preds.sub, x = "date", y = "daysSinceC")
+# ggline(preds.sub, x = "date", y = "pdeathNew_lag")
+# ggline(preds.sub, x = "date", y = "daysSinceD")
+# ggline(preds.sub, x = "date", y = "wday")
+# 
+# ggscatter(preds.sub, x = "daysSinceC", y = "pred")
+# ggscatter(preds.sub, x = "daysSinceD", y = "pred")
+# ggscatter(preds.sub, x = "pcaseNew_lag", y = "pred")
+# ggscatter(preds.sub, x = "pdeathNew_lag", y = "pred")
+# ggscatter(preds.sub, x = "wday", y = "pred")
