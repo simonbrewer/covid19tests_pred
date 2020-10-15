@@ -94,11 +94,27 @@ ve_p <- variable_profile(explain_rf, variables = "daysSinceC", type = "partial")
 ve_p$color = "_label_"
 plot(ve_p)
 
+ve_p <- variable_profile(explain_rf, variables = "daysSinceD", type = "partial")
+ve_p$color = "_label_"
+plot(ve_p)
+
 ve_p <- variable_profile(explain_rf, variables = "pnursing", type = "partial")
 ve_p$color = "_label_"
 plot(ve_p)
 
 ve_p <- variable_profile(explain_rf, variables = "lIncome", type = "partial")
+ve_p$color = "_label_"
+plot(ve_p)
+
+ve_p <- variable_profile(explain_rf, variables = "pcaseNew_lag", type = "partial")
+ve_p$color = "_label_"
+plot(ve_p)
+
+ve_p <- variable_profile(explain_rf, variables = "pdeathNew_lag", type = "partial")
+ve_p$color = "_label_"
+plot(ve_p)
+
+ve_p <- variable_profile(explain_rf, variables = "lpState_popn", type = "partial")
 ve_p$color = "_label_"
 plot(ve_p)
 
