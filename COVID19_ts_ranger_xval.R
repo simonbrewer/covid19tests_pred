@@ -83,7 +83,10 @@ p1 <- plot.df %>%
             xlab = "log test rate (obs)", ylab = "log test rate (pred)",
             main = "Training set predictions", subtitle = "Random forest") +
   geom_abline(intercept = 0, slope = 1)
-pdf("")
+pdf("COVID19_rf_obs_pred_train.pdf")
+print(p1)
+dev.off()
+
 ## Test set
 rf.pred <- predict(mod, testing)
 plot.df <- data.frame(obs = testing$ltest_rate, pred = rf.pred$predictions)
@@ -93,6 +96,9 @@ p2 <- plot.df %>%
             xlab = "log test rate (obs)", ylab = "log test rate (pred)",
             main = "Test set predictions", subtitle = "Random forest") +
   geom_abline(intercept = 0, slope = 1)
+pdf("COVID19_rf_obs_pred_test.pdf")
+print(p2)
+dev.off()
 
 ## -------------------------------------------------------------------------------------------
 ## Full model
