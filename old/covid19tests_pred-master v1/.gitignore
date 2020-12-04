@@ -1,0 +1,6 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+rawdata/countyTable_timeSeries_conus.csv
+covid19new.RData

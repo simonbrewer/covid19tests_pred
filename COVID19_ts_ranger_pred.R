@@ -7,6 +7,7 @@ set.seed(1234)
 library(dplyr)
 library(lubridate)
 library(skimr)
+library(recipes)
 library(caret)
 library(gbm) ## For importance scores
 library(randomForest)
@@ -14,16 +15,18 @@ library(ranger)
 library(ggpubr)
 library(vip)
 library(pdp)
+library(dplyr)
+library(tidyverse)
 
 
-load("./covid19.RData")
+load("./outputs/covid19.RData")
 
 dat <- dat %>%
   filter(!is.na(pcaseNew_lag))
 
 dat$ltest_rate <- log(dat$test_rate+1e-5)
 # dat$daysSinceC[dat$daysSinceC < 0] <- 0
-load("./covid19new.RData")
+load("./outputs/covid19new.RData")
 
 newdat <- newdat %>%
   filter(!is.na(pcaseNew_lag))
@@ -63,7 +66,7 @@ mod <- ranger(f1, data = dat, num.trees = 500,
               # importance = 'permutation',
               case.weights = casewgt)
 
-save(mod, file = "rf_pred.RData")
+save(mod, file = "./outputs/rf_pred.RData")
 ## Predict
 pred <- predict(mod, newdat, predict.all = TRUE,
                 verbose = TRUE, type = "response")
@@ -75,9 +78,12 @@ newdat$pred <- exp(apply(pred$predictions, 1, mean))
 newdat$pred = newdat$pred - 1e-5
 
 out <- newdat %>% 
-  select(state, date, FIPS, county, pred)
+  select(state.x, date, FIPS, county, pred)
 
-write.csv(out, "COVID19_tests_pred_ranger.csv", row.names = FALSE)
+
+view(out %>% count(date))  #diagnostic: how many records per county
+
+write.csv(out, "./outputs/COVID19_tests_pred_ranger.csv", row.names = FALSE)
 
 
 # fips = 53033
