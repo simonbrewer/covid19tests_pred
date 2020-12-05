@@ -14,8 +14,13 @@ library(ggpubr)
 library(vip)
 library(pdp)
 
+my_log <- file("./outputs/COVDI19_ts_ranger_inner_outer_output.txt") # File name of output log
+sink(my_log, append = TRUE, type = "output") # Writing console output to log file
+sink(my_log, append = TRUE, type = "message")
 
-load("./covid19.RData")
+
+
+load("./outputs/covid19.RData")
 dat <- dat %>%
   filter(!is.na(pcaseNew_lag))
 
@@ -99,4 +104,5 @@ for (i in 1:nfolds) {
   base_mae[i] <- postResample(pred <- testing$baseline, obs = testing$test_rate)[3]
   
 }
+closeAllConnections() # Close connection to log file
 
