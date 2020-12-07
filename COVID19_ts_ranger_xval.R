@@ -15,7 +15,7 @@ library(vip)
 library(pdp)
 
 
-load("./covid19.RData")
+load("./outputs/covid19.RData")
 dat <- dat %>%
   filter(!is.na(pcaseNew_lag))
 
@@ -90,15 +90,34 @@ dev.off()
 ## Test set
 rf.pred <- predict(mod, testing)
 plot.df <- data.frame(obs = testing$ltest_rate, pred = rf.pred$predictions)
-p2 <- plot.df %>%
-  filter(obs > log(1e-1)) %>%
-  ggscatter(x = "obs", y = "pred", alpha = 0.5, size = 0.75,
-            xlab = "log test rate (obs)", ylab = "log test rate (pred)",
-            main = "Test set predictions", subtitle = "Random forest") +
-  geom_abline(intercept = 0, slope = 1)
-pdf("COVID19_rf_obs_pred_test.pdf")
-print(p2)
+
+
+#obs vs. pred plot
+ggplot(filter(plot.df,obs > log(1e-1)), aes(x=obs, y=pred)) + 
+  geom_point(size = 0.5, shape = 1)+
+  geom_abline(intercept = 0, slope = 1)+
+  xlab("log test rate (obs)")+
+  ylab("log test rate (pred)")+
+  theme_bw()
+
+ggsave('./figures/obs_vs_pred.jpg'
+       ,width = 7 
+       ,height = 5 
+       ,units = "cm"
+       ,dpi = 300
+       ,device = "jpg"
+)
 dev.off()
+
+# p2 <- plot.df %>%
+#   filter(obs > log(1e-1)) %>%
+#   ggscatter(x = "obs", y = "pred", alpha = 0.5, size = 0.75,
+#             xlab = "log test rate (obs)", ylab = "log test rate (pred)",
+#             main = "Test set predictions", subtitle = "Random forest") +
+#   geom_abline(intercept = 0, slope = 1)
+# pdf("COVID19_rf_obs_pred_test.pdf")
+# print(p2)
+# dev.off()
 
 ## -------------------------------------------------------------------------------------------
 ## Full model
