@@ -29,20 +29,9 @@ f1 <- ltest_rate ~ lpState_popn + lpPop_o_60 + lpPop_m + lpPop_white +
   lIncome + lpBachelor + phospitals + pnursing + puniversities +
   pcaseNew_lag + daysSinceC + pdeathNew_lag + daysSinceD + hospRate + wday # + sTest
 
-# f1 <- test_rate ~ pnursing +
-#   pcaseNew + daysSinceC + pdeathNew + daysSinceD + hospRate
-
 ## -------------------------------------------------------------------------------------------
 states = unique(sort(dat$state))
 nstates = length(states)
-
-
-## -------------------------------------------------------------------------------------------
-ctrl <- trainControl(method = "repeatedcv", 
-                     number = 5,
-                     repeats = 3,
-                     verboseIter = TRUE)
-ctrl <- trainControl(method = "none", verboseIter = TRUE)
 
 
 ## -------------------------------------------------------------------------------------------
@@ -62,6 +51,7 @@ base_results <- data.frame(states,
 
 
 ## -------------------------------------------------------------------------------------------
+## Update this if the hyperparameters change
 parGrid = expand.grid(mtry = 6, splitrule = "variance", min.node.size = 4)
 
 ## -------------------------------------------------------------------------------------------
