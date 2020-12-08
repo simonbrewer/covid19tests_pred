@@ -19,4 +19,4 @@ Codes are available for full transparency. The six scripts below have to be run 
 7. COVID19_ts_ranger_statecv.r (statewise cross-validation)
 
 Predictions version 2 (4/14/2020 - 9/8/2020)
-![alt text](https://github.com/alexandster/covid19tests_pred/blob/master/figures/pred_cumulative.jpg)
+[alt text](https://github.com/alexandster/covid19tests_pred/blob/master/figures/pred_cumulative.jpg)
