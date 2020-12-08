@@ -2,7 +2,7 @@
 
 In response to the lack of nationwide COVID-19 testing data at the county-level, we estimated the daily number of diagnostic tests administered for each county in the contiguous United States. We integrated state- and county-level data available from various sources to train a random forest model that predicts the number of tests. 
 
-Our [estimates](https://raw.githubusercontent.com/alexandster/covid19tests_pred/master/outputs/COVID19_tests_pred_ranger.csv) are available from this GitHub repository, which his updated monthly with the newest testing numbers. The units of our estimates are the number of tests per 1,000 population within a county.
+Our [estimates](outputs/COVID19_tests_pred_ranger.csv) are available from this GitHub repository, which his updated monthly with the newest testing numbers. The units of our estimates are the number of tests per 1,000 population within a county.
 
 **Currently, this repository contains estimates for the period of 4/14/2020 - 9/8/2020.**
 
@@ -18,5 +18,17 @@ Codes are available for full transparency. The six scripts below have to be run 
 6. COVID19_ts_graphs.r (create plots)
 7. COVID19_ts_ranger_statecv.r (statewise cross-validation)
 
-Predictions version 2 (4/14/2020 - 9/8/2020)
-[alt text](https://github.com/alexandster/covid19tests_pred/blob/master/figures/pred_cumulative.jpg)
+**Current predictions (version 2, 4/14/2020 - 9/8/2020)**
+![alt text](figures/pred_cumulative.jpg)
+
+As new testing data becomes available, we retrain our model and predict for the entire (now extended) study period:
+
+Version 1: 4/14/2020 - 8/8/2020
+Version 2 (current): 4/14/2020 - 9/8/2020
+
+Therefore, predictions for the previous study period may change. It follows a summary of the latest changes.
+
+**Time series plot: Number of predicted tests nationwide (Version 1, Version 2)**
+![alt text](figures/diff_time_series.jpg)
+
+**Map of relative change between Version 1 and Version 2**
