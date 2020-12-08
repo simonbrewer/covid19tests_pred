@@ -33,5 +33,5 @@ Therefore, predictions for the previous study period may change. It follows a su
 ![alt text](figures/diff_time_series.jpg)
 
 
-**Map of relative change between Version 1 and Version 2**
+**Map of relative change between Version 1 and Version 2 (4/14/2020 - 8/8/2020)**
 ![alt text](figures/change.jpg)
