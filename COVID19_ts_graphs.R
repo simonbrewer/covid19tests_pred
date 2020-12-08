@@ -6,6 +6,9 @@ library(ggplot2)
 library(classInt)
 library(tidycensus)
 library(ggpubr)
+library(dplyr)
+library(RColorBrewer)
+
 
 #read file
 test <- as.data.frame(read.csv("./outputs/COVID19_tests_pred_ranger.csv"))
@@ -104,8 +107,87 @@ ggsave('./figures/time_series.jpg'
 )
 
 
-# #Time series plot using ggpubr
-# #------------------------------------------------------------------------------------------------------- 
-# 
-# ggline(sums, x = "Category", y = "x", xlab = c(sums$Category[1], sums$Category[length(sums$Category)]))
+# time series plot: previous version's predictions vs. current version's predictions
+#------------------------------------------------------------------------------------------------------- 
+startDate <- "2020-04-13"
+
+#get your own key!
+census_api_key("767b7c8f877abf0396b842d5a3f5e92aa5ba05c1")
+
+#get pop
+Tot_pop <- subset(get_acs(geography = "county", 
+                          variables = c(var = "B01003_001"), 
+                          year = 2018),
+                  select = -c(NAME,variable, moe))
+
+#read previous version's predictions
+test_old <- as.data.frame(read.csv("./old/covid19tests_pred-master v1/COVID19_tests_pred_ranger.csv"))
+
+#date range = study period
+test <- test[test$date >= startDate & test$date <= max(test_old$date),]  
+
+#pad FIPS code with leading zero
+test$FIPS <- str_pad(test$FIPS, 5, pad="0")
+test_old$FIPS <- str_pad(test_old$FIPS, 5, pad="0")
+
+#join test, test_old, Tot_pop
+dat <-left_join(left_join(test, test_old, by = c("FIPS", "date")), Tot_pop, by = c("FIPS" = "GEOID"))
+
+#multiply predictions with county population
+dat$pred.x <- dat$pred.x * dat$estimate
+dat$pred.y <- dat$pred.y * dat$estimate
+
+#sum by date      
+test.sum <- aggregate(x = dat[c("pred.x", "pred.y")],
+                      FUN = sum,
+                      by = list(Group.date = dat$date))
+
+#convert to date
+test.sum$date <- as.Date(test.sum$Group.date)
+
+# plot
+p <- ggplot(test.sum, aes(x=date)) + 
+  geom_line(aes(y = pred.x, color = "blue")) + 
+  geom_line(aes(y = pred.y, color = "red")) +
+  scale_color_discrete(labels = c("previous", "current")) +
+  ylab("tests")
+  
+p
+
+ggsave('./figures/diff_time_series.jpg'
+       ,width = 12 
+       ,height = 8 
+       ,units = "cm"
+       ,dpi = 300
+       ,device = "jpg"
+)
+
+#map: previous version's predictions vs. current version's predictions
+#------------------------------------------------------------------------------------------------------- 
+
+#sum by county      
+county.sum <- aggregate(x = dat[c("pred.x", "pred.y")],
+                      FUN = sum,
+                      by = list(Group.date = dat$FIPS))
+
+#compute relative change
+county.sum$ratio <- (county.sum$pred.x - county.sum$pred.y)/county.sum$pred.y
+
+#join with countie geometries
+mapObj <- left_join(geom,county.sum, by = c("GEOID" = "Group.date"))
+
+#color palette
+pal <- brewer.pal(7, "OrRd") # we select 7 colors from the palette
+class(pal)
+
+#save map as JPG
+png(filename="./figures/change.jpg", width = 900, height = 600)
+
+#plot
+g <- plot(mapObj["ratio"], 
+     main = "relative change",
+     breaks = "quantile", nbreaks = 7,
+     pal = pal)
+     
+dev.off()
 
