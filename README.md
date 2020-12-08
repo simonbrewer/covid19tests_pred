@@ -23,7 +23,7 @@ Codes are available for full transparency. The six scripts below have to be run 
 
 As new testing data becomes available, we retrain our model and predict for the entire (now extended) study period:
 
-Version 1: 4/14/2020 - 8/8/2020
+Version 1: 4/14/2020 - 8/8/2020<br/>
 Version 2 (current): 4/14/2020 - 9/8/2020
 
 Therefore, predictions for the previous study period may change. It follows a summary of the latest changes.
