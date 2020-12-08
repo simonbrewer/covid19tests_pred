@@ -10,9 +10,13 @@ We hope that our efforts contribute towards understanding and mitigating the COV
 
 Codes are available for full transparency. The six scripts below have to be run in order.
 
-1. COVID19_ts_data_wrangle.r
-2. COVID19_conus_data_wrangle.r
-3. COVID19_preprocess_data.r
-4. COVID19_ts_ranger_pred.r
-5. COVID19_ts_ranger_inner_outer.r
-6. COVID19_ts_graphs.r
+1. COVID19_ts_data_wrangle.r (gather county-level testing data and predictors, cleaning)
+2. COVID19_conus_data_wrangle.r (gather nationwide predictors, cleaning) 
+3. COVID19_preprocess_data.r (more preprocessing)
+4. COVID19_ts_ranger_pred.r (build random forest model, predict)
+5. COVID19_ts_ranger_inner_outer.r (model evaluation (mean absolute error), compare to basemodel)
+6. COVID19_ts_graphs.r (create plots)
+7. COVID19_ts_ranger_statecv.r (statewise cross-validation)
+
+Predictions version 2 (4/14/2020 - 9/8/2020)
+![alt text](https://github.com/alexandster/covid19tests_pred/blob/master/figures/pred_cumulative.jpg)
