@@ -28,7 +28,10 @@ Version 2 (current): 4/14/2020 - 9/8/2020
 
 Therefore, predictions for the previous study period may change. It follows a summary of the latest changes.
 
+
 **Time series plot: Number of predicted tests nationwide (Version 1, Version 2)**
 ![alt text](figures/diff_time_series.jpg)
 
+
 **Map of relative change between Version 1 and Version 2**
+![alt text](figures/change.jpg)
