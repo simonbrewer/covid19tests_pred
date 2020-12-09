@@ -13,7 +13,11 @@ library(vip)
 library(pdp)
 
 
-load("./covid19.RData")
+my_log <- file("./outputs/COVDI19_ts_ranger_statecv.txt") # File name of output log
+sink(my_log, append = TRUE, type = "output") # Writing console output to log file
+sink(my_log, append = TRUE, type = "message")
+
+load("./outputs/covid19.RData")
 
 dat <- dat %>%
   filter(!is.na(pcaseNew_lag))
@@ -84,7 +88,8 @@ for (i in 1:nstates) {
     num.trees = 250,
     weights = casewgt,
     # importance = 'permutation',
-    trControl = ctrl)
+    trControl = trainControl(method = "cv")
+    )
   
   ## Plot tuning results
   # ggplot(modFit)
@@ -106,16 +111,20 @@ for (i in 1:nstates) {
   p1 = ggscatter(mydf, x = "obs", y = "pred", col = "type", 
             main = paste0("COVID 19 testing (",states[i],", raw-scale)")) + 
     geom_abline()
-  ggsave(file = paste0("./statecv/ranger/covid_",states[i],"_ranger.png"), 
+  ggsave(file = paste0("./figures/cv/covid_",states[i],"_ranger.png"), 
          p1, device = "png")
 }
 
 
 ## -------------------------------------------------------------------------------------------
+print("model results")
 knitr::kable(mod_results, digits = 4)
+print("basemodel results")
 knitr::kable(base_results, digits = 4)
 
+print("mean(base_results$MAE), mean(mod_results$MAE)")
 print(paste(mean(base_results$MAE), mean(mod_results$MAE)))
 
-save(mod_results, base_results, file = "./statecv/ranger/results.RData")
+save(mod_results, base_results, file = "./outputs/cvResults.RData")
 
+closeAllConnections() # Close connection to log file
